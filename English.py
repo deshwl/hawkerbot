@@ -4,7 +4,7 @@ from llama_index.core import VectorStoreIndex, ServiceContext, Document
 from llama_index.core import SimpleDirectoryReader
 from llama_index.llms.langchain import LangChainLLM
 from langchain.llms import Bedrock
-from llama_index.embeddings import LangchainEmbedding
+from llama_index.embeddings.langchain import LangchainEmbedding
 from langchain.embeddings import BedrockEmbeddings
 
 st.set_page_config(page_title="Chat with HawkerBOT 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
