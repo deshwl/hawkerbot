@@ -6,3 +6,4 @@ pypdf
 boto3
 langchain
 llama-index-llms-langchain
+llama-index-embeddings-langchain
