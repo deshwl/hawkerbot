@@ -5,3 +5,4 @@ nltk
 pypdf
 boto3
 langchain
+llama-index-llms-langchain
