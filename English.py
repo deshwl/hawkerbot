@@ -65,7 +65,7 @@ bedrock_embedding = BedrockEmbeddings(
 embed_model = LangchainEmbedding(bedrock_embedding)
 
 # Service Context
-from llama_index import ServiceContext, set_global_service_context
+from llama_index.core import ServiceContext, set_global_service_context
 
 service_context = ServiceContext.from_defaults(
   llm=llm,
