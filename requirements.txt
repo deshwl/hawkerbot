@@ -3,4 +3,4 @@ llama-index-core
 pypdf
 boto3
 langchain
-nltk
+llama-index-llms-langchain
