@@ -2,7 +2,7 @@ import streamlit as st
 import boto3
 from llama_index.core import VectorStoreIndex, ServiceContext, Document
 from llama_index.core import SimpleDirectoryReader
-from llama_index.core.llms.langchain import LangChainLLM
+from llama_index.llms.langchain import LangChainLLM
 from langchain.llms import Bedrock
 from llama_index.embeddings.langchain import LangchainEmbedding
 from langchain.embeddings import BedrockEmbeddings
