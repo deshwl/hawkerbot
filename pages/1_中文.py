@@ -1,10 +1,10 @@
 import streamlit as st
 import boto3
-from llama_index.legacy.legacy import VectorStoreIndex, ServiceContext, Document
-from llama_index.legacy.legacy import SimpleDirectoryReader
-from llama_index.legacy.legacy.llms import LangChainLLM
+from llama_index.core import VectorStoreIndex, ServiceContext, Document
+from llama_index.core import SimpleDirectoryReader
+from llama_index.llms.langchain import LangChainLLM
 from langchain.llms import Bedrock
-from llama_index.legacy.legacy.embeddings import LangchainEmbedding
+from llama_index.embeddings.langchain import LangchainEmbedding
 from langchain.embeddings import BedrockEmbeddings
 
 st.set_page_config(page_title="与小贩机器人聊天 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
@@ -65,12 +65,12 @@ bedrock_embedding = BedrockEmbeddings(
 embed_model = LangchainEmbedding(bedrock_embedding)
 
 # Service Context
-from llama_index.legacy.legacy import ServiceContext, set_global_service_context
+from llama_index.core import ServiceContext, set_global_service_context
 
 service_context = ServiceContext.from_defaults(
   llm=llm,
   embed_model=embed_model,
-  system_prompt="You are an AI assistant and your job is to answer questions about the data you have. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
+  system_prompt="You are a multilingual chatbot and your job is to answer questions from to-be hawkers about the data you have about tender bids. Forget everything you knew about the world. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
 )
 
 set_global_service_context(service_context)
