@@ -1,10 +1,10 @@
 import streamlit as st
 import boto3
-from llama_index.core import VectorStoreIndex, ServiceContext, Document
-from llama_index.core import SimpleDirectoryReader
-from llama_index.llms.langchain import LangChainLLM
+from llama_index import VectorStoreIndex, ServiceContext, Document
+from llama_index import SimpleDirectoryReader
+from llama_index.llms import LangChainLLM
 from langchain.llms import Bedrock
-from llama_index.embeddings.langchain import LangchainEmbedding
+from llama_index.embeddings import LangchainEmbedding
 from langchain.embeddings import BedrockEmbeddings
 
 st.set_page_config(page_title="与小贩机器人聊天 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
@@ -65,7 +65,7 @@ bedrock_embedding = BedrockEmbeddings(
 embed_model = LangchainEmbedding(bedrock_embedding)
 
 # Service Context
-from llama_index.core import ServiceContext, set_global_service_context
+from llama_index import ServiceContext, set_global_service_context
 
 service_context = ServiceContext.from_defaults(
   llm=llm,
