@@ -3,3 +3,4 @@ llama-index
 pypdf
 boto3
 langchain
+nltk
