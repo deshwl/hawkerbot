@@ -43,7 +43,7 @@ bedrock_runtime = new_session.client(
 model_id = "anthropic.claude-v2"
 model_kwargs =  { 
     "max_tokens_to_sample": 4096,
-    "temperature": 1,
+    "temperature": 0.1,
     "top_k": 250,
     "top_p": 1,
 }
