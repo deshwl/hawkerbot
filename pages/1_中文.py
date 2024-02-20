@@ -65,15 +65,11 @@ bedrock_embedding = BedrockEmbeddings(
 embed_model = LangchainEmbedding(bedrock_embedding)
 
 # Service Context
-from llama_index.core import ServiceContext, set_global_service_context
+from llama_index.core import Settings
 
-service_context = ServiceContext.from_defaults(
-  llm=llm,
-  embed_model=embed_model,
-  system_prompt="You are a multilingual chatbot and your job is to answer questions from to-be hawkers about the data you have about tender bids. Forget everything you knew about the world. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
-)
-
-set_global_service_context(service_context)
+Settings.llm = llm
+Settings.embed_model = embed_model
+Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
 
 for key in st.session_state.keys():
         del st.session_state[key]
