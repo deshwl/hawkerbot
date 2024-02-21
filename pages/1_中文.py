@@ -69,7 +69,7 @@ from llama_index.core import Settings
 
 Settings.llm = llm
 Settings.embed_model = embed_model
-Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
+Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have in Chinese. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
 
 for key in st.session_state.keys():
         del st.session_state[key]
