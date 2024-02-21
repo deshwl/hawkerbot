@@ -69,7 +69,7 @@ from llama_index.core import Settings
 
 Settings.llm = llm
 Settings.embed_model = embed_model
-Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have in English. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
+Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have. Keep your answers in English, short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
 
 # Initialize the chat messages history        
 if "messages" not in st.session_state.keys(): 
