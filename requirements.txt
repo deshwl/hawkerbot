@@ -3,3 +3,4 @@ llama-index
 boto3
 llama-index-llms-langchain
 llama-index-embeddings-langchain
+llama-index-llms-bedrock
