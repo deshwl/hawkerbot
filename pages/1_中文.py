@@ -1,11 +1,19 @@
 import streamlit as st
 import boto3
-from llama_index.core import VectorStoreIndex, ServiceContext, Document
-from llama_index.core import SimpleDirectoryReader
-from llama_index.llms.langchain import LangChainLLM
-from langchain.llms import Bedrock
-from llama_index.embeddings.langchain import LangchainEmbedding
-from langchain.embeddings import BedrockEmbeddings
+from llama_index.core import ( 
+    VectorStoreIndex,
+    SimpleDirectoryReader,
+    Document,
+    StorageContext,
+    load_index_from_storage
+)
+from llama_index.core.settings import Settings
+from llama_index.llms.bedrock import Bedrock
+from llama_index.embeddings.bedrock import BedrockEmbedding, Models
+
+# Clear Chat History fuction
+def clear_screen():
+    st.session_state.messages = [{"role": "assistant", "content": "你好，烹饪大师！问我有关小贩摊位投标的问题!"}]
 
 st.set_page_config(page_title="与小贩机器人聊天 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.sidebar.success("选择上面的语言")
@@ -14,6 +22,7 @@ with st.sidebar.expander("过去的聊天记录", expanded=True):
     `[ 22 Jan 2024 ]`
     你: 非常感谢你的帮助! 👍  
     """)
+st.sidebar.button('Clear Screen', on_click=clear_screen)
 st.image("./images/logo.png")
 st.title("与小贩机器人聊天 🤖💬")
 st.markdown('''
@@ -28,69 +37,43 @@ st.markdown('''
 </div>
 </div>
 ''', unsafe_allow_html=True)
+
 # Setup Bedrock
 region='us-east-1'
 new_session = boto3.Session(
 aws_access_key_id=st.secrets["AWS_ACCESS_ID"],
 aws_secret_access_key=st.secrets["AWS_ACCESS_KEY"])
 
-bedrock_runtime = new_session.client(
+bedrock_runtime = boto3.client(
     service_name='bedrock-runtime',
     region_name=region,
+    aws_access_key_id=AWS_KEY, 
+    aws_secret_access_key=AWS_SECRET_KEY
 )
 
-# LLM - Amazon Bedrock LLM using LangChain
-model_id = "anthropic.claude-v2"
-model_kwargs =  { 
-    "max_tokens_to_sample": 4096,
-    "temperature": 0.1,
-    "top_k": 250,
-    "top_p": 1,
-}
-
-llm = Bedrock(
-    client=bedrock_runtime,
-    model_id=model_id,
-    model_kwargs=model_kwargs
-)
-
-# Embedding Model - Amazon Titan Embeddings Model using LangChain
-# create embeddings
-bedrock_embedding = BedrockEmbeddings(
-    client=bedrock_runtime,
-    model_id="amazon.titan-embed-text-v1",
-)
-
-# load in Bedrock embedding model from langchain
-embed_model = LangchainEmbedding(bedrock_embedding)
-
-# Service Context
-from llama_index.core import Settings
+llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240620-v1:0", system_prompt="You are an AI assistant and your job is to answer questions about the data you have. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer.")
+embed_model = BedrockEmbedding(client=bedrock_runtime, model = "amazon.titan-embed-text-v1")
 
 Settings.llm = llm
 Settings.embed_model = embed_model
-Settings.system_prompt = "You are an AI assistant and your job is to answer questions about the data you have. Keep your answers in Chinese, short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer."
-
-for key in st.session_state.keys():
-        del st.session_state[key]
-
-# Initialize the chat messages history        
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [
-        {"role": "assistant", "content": "你好，人类！问我有关小贩摊位投标的问题！"}
-    ]
 
 @st.cache_resource(show_spinner=False)
 def load_data():
   with st.spinner(
     text="启动人工智能引擎。可能还要等一下..."):
-    reader=SimpleDirectoryReader(input_dir="./data", recursive=True)
-    docs=reader.load_data()
-    index=VectorStoreIndex.from_documents(docs)
+    # load the documents and create the index
+    documents = SimpleDirectoryReader(input_dir="data", recursive=True).load_data()
+    index = VectorStoreIndex.from_documents(documents)
     return index
 
 # Create Index
 index=load_data()
+
+# Initialize the chat messages history        
+if "messages" not in st.session_state.keys():
+    st.session_state.messages = [
+        {"role": "assistant", "content": "你好，烹饪大师！问我有关小贩摊位投标的问题!"}
+    ]
 
 # Initialize the chat engine
 if "chat_engine" not in st.session_state.keys(): 
@@ -103,13 +86,13 @@ if prompt := st.chat_input("问我问题"):
 # Display the prior chat messages
 for message in st.session_state.messages: 
     with st.chat_message(message["role"]):
-        st.write(message["content"])
+        st.write(message["content"].replace("$", "\$"))
 
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("请给我一分钟，让我想想..."):
             response = st.session_state.chat_engine.chat(prompt)
-            st.write(response.response)
+            st.write(response.response.replace("$", "\$"))
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message) # Add response to message history
