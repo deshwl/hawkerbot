@@ -40,15 +40,12 @@ st.markdown('''
 
 # Setup Bedrock
 region='us-east-1'
-new_session = boto3.Session(
-aws_access_key_id=st.secrets["AWS_ACCESS_ID"],
-aws_secret_access_key=st.secrets["AWS_ACCESS_KEY"])
 
 bedrock_runtime = boto3.client(
     service_name='bedrock-runtime',
     region_name=region,
-    aws_access_key_id=AWS_KEY, 
-    aws_secret_access_key=AWS_SECRET_KEY
+    aws_access_key_id=st.secrets["AWS_ACCESS_ID"],
+    aws_secret_access_key=st.secrets["AWS_ACCESS_KEY"])
 )
 
 llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240620-v1:0", system_prompt="You are an AI assistant and your job is to answer questions about the data you have. Keep your answers short, concise and do not hallucinate. If the user ask questions that you don't know, apologize and say that you cannot answer.")
