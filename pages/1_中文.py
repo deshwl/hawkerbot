@@ -50,7 +50,7 @@ bedrock_runtime = boto3.client(
     aws_secret_access_key=st.secrets["AWS_ACCESS_KEY"]
 )
 
-llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240620-v1:0", system_prompt="你是一名人工智能助理，你的工作是回答有关你所拥有的数据的问题。让你的答案简短、简洁，不要产生幻觉。如果用户问你不知道的问题，道歉并说你无法回答")
+llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240620-v1:0", system_prompt="你是一名人工智能助理，你的工作是回答有关你所拥有的小贩摊位投标数据的问题。让你的答案简短、简洁，不要产生幻觉。如果用户问你不知道的问题，道歉并说你无法回答")
 embed_model = BedrockEmbedding(client=bedrock_runtime, model = "amazon.titan-embed-text-v1")
 
 Settings.llm = llm
