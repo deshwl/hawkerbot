@@ -13,6 +13,8 @@ from llama_index.embeddings.bedrock import BedrockEmbedding, Models
 
 # Clear Chat History fuction
 def clear_screen():
+    for key in st.session_state.keys():
+        del st.session_state[key]
     st.session_state.messages = [{"role": "assistant", "content": "Greetings, Culinary Maestro! Ready to spice up your tender bids? Ask me anything about hawker stall tender bids!"}]
 
 st.set_page_config(page_title="Chat with HawkerBOT 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
