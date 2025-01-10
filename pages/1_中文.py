@@ -119,10 +119,10 @@ if st.session_state.first_time_user:
     show_first_time_user_guide()
 else:
     with st.sidebar.expander("过去的聊天记录", expanded=True):
-    st.markdown("""
-    `[ 22 Jan 2024 ]`
-    你: 非常感谢你的帮助! 👍  
-    """)
+        st.markdown("""
+        `[ 22 Jan 2024 ]`
+        你: 非常感谢你的帮助! 👍  
+        """)
 
     # Add a way for users to revisit the guide
 
