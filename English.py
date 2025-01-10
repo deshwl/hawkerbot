@@ -27,7 +27,7 @@ def show_first_time_user_guide():
     st.markdown("Type your question about hawker stalls tender bids or becoming a hawker in the chat box at the bottom of the screen.")
     st.markdown("### 2. Get an Answer")
     st.image("./images/answer.JPG", width=600)
-    st.markdown("HawkerBot will provide an answer based on the latest information about hawker stalls tender bids and regulations.")
+    st.markdown("HawkerBot will provide an answer based on available information about hawker stalls tender bids and regulations.")
     st.markdown("### 3. Explore More")
     st.markdown("Feel free to ask follow-up questions or explore different topics related to hawker stalls!")
     st.markdown("### Need Help?")
