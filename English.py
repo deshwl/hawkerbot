@@ -20,7 +20,8 @@ def clear_screen():
 # Function to show first-time user guide
 
 def show_first_time_user_guide():
-    st.markdown("## Welcome to HawkerBot! 🍜")
+    st.image("./images/logo.png")
+    st.markdown("## Welcome to NEA HawkerBot!")
     st.markdown("Let's get you started with a quick guide:")
     st.markdown("### 1. Ask a Question")
     st.image("./images/question.JPG", width=600)
