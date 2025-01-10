@@ -109,11 +109,18 @@ else:
         `[ 22 Jan 2024 ]`
         You: Thank you so much for your help! 👍  
         """)
-    col1, col2 = st.columns([3,1])
-    with col2:
-        if st.button('Clear Chat History'):
-                clear_screen()
 
+    # Add a way for users to revisit the guide
+
+    if not st.session_state.first_time_user:
+            col1, col2, col3 = st.columns([2,1,1])
+            with col2:
+                if st.button('Clear Chat History'):
+                    clear_screen()
+            with col3:
+                if st.button("Show Guide Again"):
+                    st.session_state.first_time_user = True
+                    st.rerun()
     st.image("./images/logo.png")
     gradient_text_html = """
     <style>
@@ -176,9 +183,3 @@ else:
                     if st.button("🤔 Unclear"):
                         st.warning("We'll try to make our responses clearer.")
                         # Here you could log the feedback about clarity
-# Add a way for users to revisit the guide
-
-if not st.session_state.first_time_user:
-        if st.sidebar.button("Show Guide Again"):
-            st.session_state.first_time_user = True
-            st.rerun()
