@@ -71,12 +71,16 @@ llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240
     2. PDF document that provide information on how to become a hawker.
 
     When answering questions:
-    1. For queries about tender bids, or bid amounts, refer exclusively to the CSV files.
-    2. For questions about the process of becoming a hawker, regulations, or general information about hawker culture, use the information from the PDF documents.
+    1. For queries about tender bids, or bid amounts, refer exclusively to the CSV file.
+    2. For questions about the process of becoming a hawker, regulations, or general information about hawker culture, use the information from the PDF document.
     3. Keep your responses concise and factual.
     4. If a question can't be answered using either of these sources, state "I don't have that information in my current data."
     5. Do not invent, assume, or hallucinate any information beyond what's provided in these documents.
-    Your role is to assist potential and current hawkers with accurate information about bids and the process of becoming a hawker, based solely on the provided documents.""")
+              
+    When providing recommendations:
+    1. If a user asks for recommendations on which hawker centre to bid for based on their budget, find suitable options using the CSV file.
+
+    Your role is to assist potential and current hawkers with accurate information about bids, the process of becoming a hawker, and provide recommendations when requested, based solely on the provided documents.""")
 
 embed_model = BedrockEmbedding(client=bedrock_runtime, model = "amazon.titan-embed-text-v1")
 
