@@ -35,6 +35,14 @@ def show_first_time_user_guide():
     st.markdown("- What is the highest bid for a cooked food stall at Chomp Chomp Food Centre?")
     st.markdown("- How do I tender for a hawker stall?")
     st.markdown("- What's the average rental price for a stall at Maxwell Food Centre?")
+    # Add the caveat here
+    st.warning("""
+    Please note:
+    - This chatbot provides information based on publicly available data and may not reflect real-time changes.
+    - The responses should be used for general guidance only and not as a substitute for official advice.
+    - For the most up-to-date and accurate information, always refer to official government sources or consult with relevant authorities.
+    - The chatbot's knowledge is limited to the data it has been trained on and may not cover all aspects of hawker-related queries.
+    """)
     if st.button("Got it! Let's start chatting"):
         st.session_state.first_time_user = False
         st.rerun()
