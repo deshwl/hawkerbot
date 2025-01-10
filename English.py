@@ -179,7 +179,6 @@ else:
 # Add a way for users to revisit the guide
 
 if not st.session_state.first_time_user:
-    with col1:
-        if st.button("Show Guide Again"):
+        if st.sidebar.button("Show Guide Again"):
             st.session_state.first_time_user = True
             st.rerun()
