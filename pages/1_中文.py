@@ -185,14 +185,14 @@ else:
                 # Add feedback buttons
                 col1, col2, col3 = st.columns(3)
                 with col1:
-                    if st.button("👍 Helpful"):
+                    if st.button("👍 有帮助"):
                         st.success("Thank you for your feedback!")
                         # Here you could log the positive feedback
                 with col2:
-                    if st.button("👎 Not Helpful"):
+                    if st.button("👎 没有帮助"):
                         st.error("We're sorry to hear that. We'll work on improving.")
                         # Here you could log the negative feedback
                 with col3:
-                    if st.button("🤔 Unclear"):
+                    if st.button("🤔 不清楚"):
                         st.warning("We'll try to make our responses clearer.")
                         # Here you could log the feedback about clarity
