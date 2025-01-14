@@ -75,8 +75,8 @@ with col2:
     if st.button("How do I apply to become a hawker?"):
         set_question("How do I apply to become a hawker?")
 with col3:
-    if st.button("If my budget is $500, which Hawker Centre can I bid for?"):
-        set_question("If my budget is $500, which Hawker Centre can I bid for?")
+    if st.button("If my budget is $500, which Hawker Centre can I bid for cooked food?"):
+        set_question("If my budget is $500, which Hawker Centre can I bid for cooked food?")
 
 # Setup Bedrock
 region='us-east-1'
