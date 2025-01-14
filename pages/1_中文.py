@@ -11,6 +11,20 @@ from llama_index.core.settings import Settings
 from llama_index.llms.bedrock import Bedrock
 from llama_index.embeddings.bedrock import BedrockEmbedding, Models
 
+# Function to clear chat history
+def clear_chat_history():
+    if "messages" in st.session_state:
+        del st.session_state.messages
+    if "chat_engine" in st.session_state:
+        del st.session_state.chat_engine
+
+# Check if the page has changed
+if "current_page" not in st.session_state:
+    st.session_state.current_page = __file__
+elif st.session_state.current_page != __file__:
+    clear_chat_history()
+    st.session_state.current_page = __file__
+
 # Clear Chat History fuction
 def clear_screen():
     for key in st.session_state.keys():
