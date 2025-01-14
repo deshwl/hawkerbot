@@ -16,45 +16,67 @@ def clear_screen():
     for key in st.session_state.keys():
         del st.session_state[key]
     st.session_state.messages = [{"role": "assistant", "content": "Greetings, Culinary Maestro! Ready to spice up your tender bids? Ask me anything about hawker stall tender bids!"}]
-    st.session_state.first_time_user = False
-# Function to show first-time user guide
 
-def show_first_time_user_guide():
-    st.image("./images/logo.png")
-    st.markdown("## Welcome to NEA HawkerBot!")
-    st.markdown("Let's get you started with a quick guide:")
-    st.markdown("### 1. Ask a Question")
-    st.image("./images/question.JPG", width=600)
-    st.markdown("Type your question about hawker stalls tender bids or becoming a hawker in the chat box at the bottom of the screen.")
-    st.markdown("### 2. Get an Answer")
-    st.image("./images/answer.JPG", width=600)
-    st.markdown("HawkerBot will provide an answer based on available information about hawker stalls tender bids and regulations.")
-    st.markdown("### 3. Explore More")
-    st.markdown("Feel free to ask follow-up questions or explore different topics related to hawker stalls!")
-    st.markdown("### Need Help?")
-    st.markdown("If you're unsure what to ask, try these sample questions:")
-    st.markdown("- What is the highest bid for a cooked food stall at Chomp Chomp Food Centre?")
-    st.markdown("- How do I tender for a hawker stall?")
-    st.markdown("- What's the average rental price for a stall at Maxwell Food Centre?")
-    # Add the caveat here
-    st.warning("""
-    Please note:
-    - This chatbot provides information based on publicly available data and may not reflect real-time changes.
-    - The responses should be used for general guidance only and not as a substitute for official advice.
-    - For the most up-to-date and accurate information, always refer to official government sources or consult with relevant authorities.
-    - The chatbot's knowledge is limited to the data it has been trained on and may not cover all aspects of hawker-related queries.
-    """)
-    if st.button("Got it! Let's start chatting"):
-        st.session_state.first_time_user = False
-        st.rerun()
+# Function to set the question when a sample question is clicked
+def set_question(question):
+    st.session_state.question = question
 
 st.set_page_config(page_title="HawkerBot 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.sidebar.success("Select language above")
+with st.sidebar.expander("Past Chat", expanded=True):
+        st.markdown("""
+        `[ 22 Dec 2024 ]`
+        You: Thank you so much for your help! 👍  
+        """)
 
-# Initialize session state for first-time user
+col1, col2 = st.columns([3,1])
+with col2:
+    if st.button('Clear Chat History'):
+        clear_screen()
 
-if "first_time_user" not in st.session_state:
-    st.session_state.first_time_user = True
+st.image("./images/logo.png")
+gradient_text_html = """
+    <style>
+    .gradient-text {
+        font-weight: bold;
+        background: -webkit-linear-gradient(left, green, lightblue);
+        background: linear-gradient(to right, green, lightblue);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline;
+        font-size: 3em;
+    }
+    </style>
+    <div class="gradient-text">HawkerBot </div>
+    """
+st.markdown(gradient_text_html, unsafe_allow_html=True)
+
+st.markdown("### Sample Questions")
+
+# Custom CSS for the buttons
+st.markdown("""
+<style>
+    .stButton > button {
+        width: 100%;
+        height: 75px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Create three columns for the buttons
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    if st.button("What is the highest bid for Chomp Chomp Food Centre cooked food stall?"):
+        set_question("What is the highest bid for Chomp Chomp Food Centre cooked food stall?")
+with col2:
+    if st.button("How do I apply to become a hawker?"):
+        set_question("How do I apply to become a hawker?")
+with col3:
+    if st.button("If my budget is $500, which Hawker Centre can I bid for?"):
+        set_question("If my budget is $500, which Hawker Centre can I bid for?")
 
 # Setup Bedrock
 region='us-east-1'
@@ -78,8 +100,8 @@ llm = Bedrock(client=bedrock_runtime, model = "anthropic.claude-3-5-sonnet-20240
     4. If a question can't be answered using either of these sources, state "I don't have that information in my current data."
     5. Do not invent, assume, or hallucinate any information beyond what's provided in these documents.
               
-    When providing recommendations:
-    1. If a user asks for recommendations on which hawker centre to bid for based on their budget, find suitable options using the CSV file.
+    When providing recommendations based on budget:
+    1. If a user asks about which hawker centre they can bid for based on their budget (e.g., "If my budget is $500, which Hawker Centre can I bid for?"), use the CSV file to find suitable options.
 
     Your role is to assist potential and current hawkers with accurate information about bids, the process of becoming a hawker, and provide recommendations when requested, based solely on the provided documents.""")
 
@@ -101,98 +123,59 @@ def load_data():
 index=load_data()
 
 # Initialize the chat messages history        
-if "messages" not in st.session_state.keys(): 
+if "messages" not in st.session_state: 
     st.session_state.messages = [
         {"role": "assistant", "content": "Greetings, Culinary Maestro! Ready to spice up your tender bids? Ask me anything about hawker stall tender bids!"}
     ]
 
 # Initialize the chat engine
-if "chat_engine" not in st.session_state.keys(): 
-        st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+if "chat_engine" not in st.session_state:
+    st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
-# Initialize session state for first-time user
+# Always show the chat input
+user_input = st.chat_input("Ask me a question")
 
-# Main app logic
+# Display the prior chat messages
+for message in st.session_state.messages: 
+    with st.chat_message(message["role"]):
+        st.write(message["content"].replace("$", "\$"))
 
-if st.session_state.first_time_user:
-    show_first_time_user_guide()
-else:
-    with st.sidebar.expander("Past Chat", expanded=True):
-        st.markdown("""
-        `[ 22 Jan 2024 ]`
-        You: Thank you so much for your help! 👍  
-        """)
+# Process new input (either from sample question or user input)
+new_input = None
+if "question" in st.session_state:
+    new_input = st.session_state.question
+    del st.session_state.question
+elif user_input:
+    new_input = user_input
 
-    # Add a way for users to revisit the guide
+if new_input:
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": new_input})
+   
+    # Display user message
+    with st.chat_message("user"):
+        st.markdown(new_input)
 
-    if not st.session_state.first_time_user:
-            col1, col2, col3 = st.columns([2,1,1])
+    # Generate and display assistant response
+    with st.chat_message("assistant"):
+        with st.spinner("One minute, cooking up a storm..."):
+            response = st.session_state.chat_engine.chat(new_input)
+            st.markdown(response.response.replace("$", "\$"))
+
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": response.response})
+
+            # Add feedback buttons
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button("👍 Helpful"):
+                    st.success("Thank you for your feedback!")
+                    # Log the positive feedback here
             with col2:
-                if st.button('Clear Chat History'):
-                    clear_screen()
+                if st.button("👎 Not Helpful"):
+                    st.error("We're sorry to hear that. We'll work on improving.")
+                    # Log the negative feedback here
             with col3:
-                if st.button("Show Guide Again"):
-                    st.session_state.first_time_user = True
-                    st.rerun()
-    st.image("./images/logo.png")
-    gradient_text_html = """
-    <style>
-    .gradient-text {
-        font-weight: bold;
-        background: -webkit-linear-gradient(left, green, lightblue);
-        background: linear-gradient(to right, green, lightblue);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline;
-        font-size: 3em;
-    }
-    </style>
-    <div class="gradient-text">HawkerBot </div>
-    """
-    st.markdown(gradient_text_html, unsafe_allow_html=True)
-    st.markdown('''
-    <div>
-    <div style="border: 0.3px solid gray; padding: 10px; border-radius: 10px; margin: 10px 0px;">
-    <p><b>Bids for hawker stall</b><br>
-    <i>Sample Question: What is the highest bid for Chomp Chomp Food Centre cooked food stall?</i></p>
-    </div>
-    <div style="border: 0.3px solid gray; padding: 10px; border-radius: 10px; margin: 10px 0px;">
-    <p><b>Recommendation for hawker stall based on budget</b><br>
-    <i>Sample Question: If my budget is $500, which Hawker Centre stall can I rent?</i></p>
-    </div>
-    </div>
-    ''', unsafe_allow_html=True)
-
-        
-    # Prompt for user input and save to chat history
-    if prompt := st.chat_input("Ask me a question"): 
-        st.session_state.messages.append({"role": "user", "content": prompt})
-
-    # Display the prior chat messages
-    for message in st.session_state.messages: 
-        with st.chat_message(message["role"]):
-            st.write(message["content"].replace("$", "\$"))
-
-    # If last message is not from assistant, generate a new response
-    if st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):
-            with st.spinner("One minute, cooking up a storm..."):
-                response = st.session_state.chat_engine.chat(prompt)
-                st.write(response.response.replace("$", "\$"))
-                message = {"role": "assistant", "content": response.response}
-                st.session_state.messages.append(message) # Add response to message history
-
-                # Add feedback buttons
-                col1, col2, col3 = st.columns(3)
-                with col1:
-                    if st.button("👍 Helpful"):
-                        st.success("Thank you for your feedback!")
-                        # Here you could log the positive feedback
-                with col2:
-                    if st.button("👎 Not Helpful"):
-                        st.error("We're sorry to hear that. We'll work on improving.")
-                        # Here you could log the negative feedback
-                with col3:
-                    if st.button("🤔 Unclear"):
-                        st.warning("We'll try to make our responses clearer.")
-                        # Here you could log the feedback about clarity
+                if st.button("🤔 Unclear"):
+                    st.warning("We'll try to make our responses clearer.")
+                    # Log the feedback about clarity here
