@@ -35,6 +35,27 @@ def clear_screen():
 def set_question(question):
     st.session_state.question = question
 
+# Define custom CSS
+custom_css = """
+<style>
+    [data-testid="stSidebar"] {
+        background-color: #a8e6cf;  /* This is a light greenish-blue color */
+    }
+    [data-testid="stSidebar"] > div:first-child {
+        background-color: #a8e6cf;  /* This ensures the scrollable part of the sidebar also has the same color */
+    }
+    [data-testid="stSidebarNav"] {
+        background-color: rgba(168, 230, 207, 0.1);  /* Slightly transparent version of the same color for the navigation */
+    }
+    [data-testid="stSidebarNav"]::before {
+        background-color: #a8e6cf;  /* Color for the navigation header */
+    }
+</style>
+"""
+
+# Inject custom CSS
+st.markdown(custom_css, unsafe_allow_html=True)
+
 st.set_page_config(page_title="HawkerBot 🤖💬", layout="centered", initial_sidebar_state="auto", menu_items=None)
 st.sidebar.success("Select language above")
 with st.sidebar.expander("Past Chat", expanded=True):
