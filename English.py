@@ -174,7 +174,7 @@ if new_input:
     with st.chat_message("assistant"):
         with st.spinner("One minute, cooking up a storm..."):
             response = st.session_state.chat_engine.chat(new_input)
-            response_text = str(response.response)
+            response_text = " ".join(response.response) if isinstance(response.response, list) else str(response.response)
             st.markdown(response_text.replace("$", "\$"))
 
             # Add assistant response to chat history
