@@ -144,7 +144,7 @@ if "messages" not in st.session_state:
 
 # Initialize the chat engine
 if "chat_engine" not in st.session_state:
-    st.session_state.chat_engine = index.as_chat_engine(chat_mode="context", verbose=True)
+    st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
 # Always show the chat input
 user_input = st.chat_input("Ask me a question")
@@ -152,7 +152,7 @@ user_input = st.chat_input("Ask me a question")
 # Display the prior chat messages
 for message in st.session_state.messages: 
     with st.chat_message(message["role"]):
-        st.write(str(message["content"]).replace("$", "\$"))
+        st.write(message["content"].replace("$", "\$"))
 
 # Process new input (either from sample question or user input)
 new_input = None
@@ -174,11 +174,10 @@ if new_input:
     with st.chat_message("assistant"):
         with st.spinner("One minute, cooking up a storm..."):
             response = st.session_state.chat_engine.chat(new_input)
-            response_text = " ".join(response.response) if isinstance(response.response, list) else str(response.response)
-            st.markdown(response_text.replace("$", "\$"))
+            st.markdown(response.response.replace("$", "\$"))
 
             # Add assistant response to chat history
-            st.session_state.messages.append({"role": "assistant", "content": response_text})
+            st.session_state.messages.append({"role": "assistant", "content": response.response})
 
             # Add feedback buttons
             col1, col2, col3 = st.columns(3)
